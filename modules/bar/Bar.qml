@@ -27,4 +27,13 @@ PanelWindow {
             screen: bar.screen
         }
     }
+
+    Row {
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: 4
+
+        DateDisplay {}
+    }
 }
