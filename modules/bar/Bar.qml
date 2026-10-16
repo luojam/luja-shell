@@ -17,8 +17,14 @@ PanelWindow {
         right: true
     }
 
-    Workspaces {
+    Row {
         anchors.centerIn: parent
-        screen: bar.screen
+        spacing: 4
+
+        Clock {}
+
+        Workspaces {
+            screen: bar.screen
+        }
     }
 }
