@@ -1,10 +1,11 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
+import "../../config"
 
 PanelWindow {
     id: bar
-    screen: Quickshell.screens.find(s => s.name === "DP-3") ?? Quickshell.screens[0]
+    screen: Quickshell.screens.find(s => s.name === Config.preferredOutput) ?? Quickshell.screens[0]
 
     implicitHeight: 24
     color: 'transparent'
