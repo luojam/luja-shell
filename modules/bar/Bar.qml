@@ -1,27 +1,23 @@
 import QtQuick
 import Quickshell
+import Quickshell.Wayland
 
-Variants {
-    model: Quickshell.screens
+PanelWindow {
+    id: bar
+    screen: Quickshell.screens.find(s => s.name === "DP-3") ?? Quickshell.screens[0]
 
-    PanelWindow {
-        required property var modelData
+    implicitHeight: 24
+    color: 'transparent'
+    WlrLayershell.namespace: 'luja-bar'
 
-        screen: modelData
-        implicitHeight: 32
-        color: "#181825"
+    anchors {
+        top: true
+        left: true
+        right: true
+    }
 
-        anchors {
-            top: true
-            left: true
-            right: true
-        }
-
-        Text {
-            anchors.centerIn: parent
-            text: "Luja"
-            color: "#cdd6f4"
-            font.pixelSize: 14
-        }
+    Workspaces {
+        anchors.centerIn: parent
+        screen: bar.screen
     }
 }
