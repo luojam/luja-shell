@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Services.Pipewire
 import "../../services"
+import "../../config"
 
 Rectangle {
     id: root
@@ -14,10 +15,10 @@ Rectangle {
         return percentage === 0 ? "\u{f057f}" : percentage < 50 ? "\u{f0580}" : "\u{f057e}";
     }
 
-    implicitWidth: content.implicitWidth + 16
-    implicitHeight: 20
-    radius: 10
-    color: Qt.rgba(28 / 255, 28 / 255, 28 / 255, 0.75)
+    implicitWidth: content.implicitWidth + Theme.bar.widgetPadding * 2
+    implicitHeight: Theme.bar.widgetHeight
+    radius: Theme.bar.widgetRadius
+    color: Theme.colors.barBackground
 
     PwObjectTracker {
         objects: [root.sink]
@@ -27,7 +28,7 @@ Rectangle {
         id: content
 
         anchors.centerIn: parent
-        spacing: 4
+        spacing: Theme.bar.spacing
 
         Text {
             id: volumeIcon
@@ -42,12 +43,12 @@ Rectangle {
                 x: -volumeIcon.inkBounds.x
             }
             text: root.icon
-            color: "#cdd6f4"
-            renderType: Text.NativeRendering
-            font.family: "JetBrainsMono Nerd Font"
-            font.styleName: "Regular"
-            font.pixelSize: 15
-            font.hintingPreference: Font.PreferVerticalHinting
+            color: Theme.colors.text
+            renderType: Theme.typography.textRenderType
+            font.family: Theme.typography.iconFontFamily
+            font.styleName: Theme.typography.iconFontStyle
+            font.pixelSize: Theme.typography.volumeIconFontPixelSize
+            font.hintingPreference: Theme.typography.fontHintingPreference
         }
 
         Text {
@@ -57,15 +58,13 @@ Rectangle {
             width: Math.max(volumeMetrics.advanceWidth("99%"), volumeMetrics.advanceWidth("MAX"), volumeMetrics.advanceWidth(text))
             horizontalAlignment: Text.AlignRight
             text: !root.audio ? "—" : root.percentage === 100 ? "MAX" : root.percentage + "%"
-            color: "#cdd6f4"
-            renderType: Text.NativeRendering
-            font.family: "Adwaita Sans"
-            font.styleName: "Bold"
-            font.pixelSize: 13
-            font.hintingPreference: Font.PreferVerticalHinting
-            font.features: {
-                "tnum": 1
-            }
+            color: Theme.colors.text
+            renderType: Theme.typography.textRenderType
+            font.family: Theme.typography.fontFamily
+            font.styleName: Theme.typography.barFontStyle
+            font.pixelSize: Theme.typography.barFontPixelSize
+            font.hintingPreference: Theme.typography.fontHintingPreference
+            font.features: Theme.typography.fontFeatures
         }
     }
 

@@ -14,9 +14,9 @@ PanelWindow {
     readonly property var applications: DesktopEntries.applications.values.slice().sort((a, b) => a.name.localeCompare(b.name))
 
     visible: false
-    implicitWidth: 580
-    implicitHeight: 452
-    color: "transparent"
+    implicitWidth: Theme.launcher.width
+    implicitHeight: Theme.launcher.height
+    color: Theme.colors.transparent
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.namespace: "luja-launcher"
     WlrLayershell.layer: WlrLayer.Overlay
@@ -66,27 +66,27 @@ PanelWindow {
 
     Rectangle {
         anchors.fill: parent
-        color: Qt.rgba(30 / 255, 30 / 255, 46 / 255, 0.75)
-        border.color: "#45475a"
-        radius: 16
+        color: Theme.colors.launcherBackground
+        border.color: Theme.colors.launcherBorder
+        radius: Theme.launcher.radius
 
         ListView {
             id: applicationsView
             objectName: "applications"
 
-            readonly property int rowHeight: 44
+            readonly property int rowHeight: Theme.launcher.rowHeight
             readonly property int pageSize: Math.max(1, Math.floor((height + spacing) / (rowHeight + spacing)))
 
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins: Theme.launcher.padding
             model: root.applications
-            spacing: 2
+            spacing: Theme.launcher.rowSpacing
             clip: true
             focus: true
             keyNavigationEnabled: true
             keyNavigationWraps: false
             boundsBehavior: Flickable.StopAtBounds
-            highlightMoveDuration: 0
+            highlightMoveDuration: Theme.animations.launcherHighlightDuration
 
             function movePage(direction: int): void {
                 if (count === 0)
@@ -110,8 +110,8 @@ PanelWindow {
 
                 width: applicationsView.width
                 height: applicationsView.rowHeight
-                radius: 8
-                color: ListView.isCurrentItem ? Qt.rgba(137 / 255, 180 / 255, 250 / 255, 0.18) : "transparent"
+                radius: Theme.launcher.rowRadius
+                color: ListView.isCurrentItem ? Theme.colors.launcherSelection : Theme.colors.transparent
 
                 Image {
                     id: icon
@@ -119,10 +119,10 @@ PanelWindow {
                     readonly property string iconName: row.modelData.icon || "application-x-executable"
 
                     anchors.left: parent.left
-                    anchors.leftMargin: 12
+                    anchors.leftMargin: Theme.launcher.rowPadding
                     anchors.verticalCenter: parent.verticalCenter
-                    width: 28
-                    height: 28
+                    width: Theme.launcher.iconSize
+                    height: Theme.launcher.iconSize
                     // Use the installed PNG sizes to avoid Qt's SVG clipping limitations.
                     sourceSize.width: iconName === "application-x-executable" ? 16 : 128
                     sourceSize.height: iconName === "application-x-executable" ? 16 : 128
@@ -133,17 +133,17 @@ PanelWindow {
 
                 Text {
                     anchors.left: icon.right
-                    anchors.leftMargin: 12
+                    anchors.leftMargin: Theme.launcher.rowPadding
                     anchors.right: parent.right
-                    anchors.rightMargin: 12
+                    anchors.rightMargin: Theme.launcher.rowPadding
                     anchors.verticalCenter: parent.verticalCenter
                     text: row.modelData.name
                     textFormat: Text.PlainText
-                    color: "#cdd6f4"
-                    font.family: "Adwaita Sans"
-                    font.pointSize: 14
+                    color: Theme.colors.text
+                    font.family: Theme.typography.fontFamily
+                    font.pointSize: Theme.typography.launcherFontPointSize
                     elide: Text.ElideRight
-                    renderType: Text.NativeRendering
+                    renderType: Theme.typography.textRenderType
                 }
 
                 MouseArea {
@@ -160,9 +160,9 @@ PanelWindow {
             anchors.centerIn: parent
             visible: applicationsView.count === 0
             text: "No applications found"
-            color: "#9399b2"
-            font.family: "Adwaita Sans"
-            font.pointSize: 14
+            color: Theme.colors.mutedText
+            font.family: Theme.typography.fontFamily
+            font.pointSize: Theme.typography.launcherFontPointSize
         }
     }
 }

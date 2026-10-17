@@ -25,4 +25,5 @@ end)
 
 ## Configuration
 
-Set `preferredOutput` in [config/Config.qml](config/Config.qml). Falls back to the first screen.
+- Set `preferredOutput` in [config/Config.qml](config/Config.qml). Falls back to the first screen.
+- Edit [config/Theme.qml](config/Theme.qml) for shell colors, typography, spacing, sizes, and animations.

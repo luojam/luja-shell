@@ -4,25 +4,22 @@ import QtQuick
 import QtQuick.Controls
 import Quickshell
 import Quickshell.Services.SystemTray
+import "../../config"
 
 Rectangle {
     id: root
 
-    implicitWidth: trayRow.implicitWidth + 10
-    implicitHeight: 20
+    implicitWidth: trayRow.implicitWidth + Theme.bar.trayPadding * 2
+    implicitHeight: Theme.bar.widgetHeight
     visible: SystemTray.items.values.length > 0
-    radius: 10
-    color: Qt.rgba(28 / 255, 28 / 255, 28 / 255, 0.75)
-
-    SystemPalette {
-        id: systemPalette
-    }
+    radius: Theme.bar.widgetRadius
+    color: Theme.colors.barBackground
 
     Row {
         id: trayRow
 
         anchors.centerIn: parent
-        spacing: 4
+        spacing: Theme.bar.spacing
 
         Repeater {
             model: SystemTray.items
@@ -32,13 +29,13 @@ Rectangle {
 
                 required property SystemTrayItem modelData
 
-                width: 20
-                height: 20
+                width: Theme.bar.trayItemSize
+                height: Theme.bar.trayItemSize
 
                 Image {
                     anchors.centerIn: parent
-                    width: 16
-                    height: 16
+                    width: Theme.bar.trayIconSize
+                    height: Theme.bar.trayIconSize
                     source: trayItem.modelData.icon
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
@@ -58,11 +55,11 @@ Rectangle {
                     delay: 500
                     text: trayItem.modelData.tooltipTitle || trayItem.modelData.title || trayItem.modelData.id
                     popupType: Popup.Window
-                    palette.toolTipText: systemPalette.windowText
+                    palette.toolTipText: Theme.colors.tooltipText
 
                     background: Rectangle {
-                        color: systemPalette.window
-                        border.color: systemPalette.dark
+                        color: Theme.colors.tooltipBackground
+                        border.color: Theme.colors.tooltipBorder
                     }
                 }
 

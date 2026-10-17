@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Shapes
 import Quickshell
 import Quickshell.Hyprland
+import "../../config"
 
 Rectangle {
     id: root
@@ -11,10 +12,10 @@ Rectangle {
     required property ShellScreen screen
     readonly property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
 
-    implicitWidth: workspaceRow.implicitWidth + 10
-    implicitHeight: 20
-    radius: 10
-    color: Qt.rgba(28 / 255, 28 / 255, 28 / 255, 0.75)
+    implicitWidth: workspaceRow.implicitWidth + Theme.workspaces.padding * 2
+    implicitHeight: Theme.bar.widgetHeight
+    radius: Theme.bar.widgetRadius
+    color: Theme.colors.barBackground
 
     Row {
         id: workspaceRow
@@ -30,8 +31,8 @@ Rectangle {
                 required property HyprlandWorkspace modelData
                 readonly property bool occupied: modelData.toplevels.values.length > 0
 
-                width: 18
-                height: 18
+                width: Theme.workspaces.slotSize
+                height: Theme.workspaces.slotSize
                 visible: root.monitor !== null && modelData.monitor === root.monitor && !modelData.name.startsWith("special:")
 
                 Shape {
@@ -40,9 +41,9 @@ Rectangle {
                     anchors.fill: parent
                     preferredRendererType: Shape.CurveRenderer
 
-                    property real dotWidth: indicator.modelData.active ? 16 : (indicator.occupied || indicator.modelData.urgent ? 8 : 6)
-                    property real dotHeight: indicator.modelData.active ? 12 : (indicator.occupied || indicator.modelData.urgent ? 8 : 6)
-                    property color dotColor: indicator.modelData.active ? "#89b4fa" : indicator.modelData.urgent ? "#f38ba8" : indicator.occupied ? "#bac2de" : "#585b70"
+                    property real dotWidth: indicator.modelData.active ? Theme.workspaces.activeWidth : (indicator.occupied || indicator.modelData.urgent ? Theme.workspaces.occupiedSize : Theme.workspaces.emptySize)
+                    property real dotHeight: indicator.modelData.active ? Theme.workspaces.activeHeight : (indicator.occupied || indicator.modelData.urgent ? Theme.workspaces.occupiedSize : Theme.workspaces.emptySize)
+                    property color dotColor: indicator.modelData.active ? Theme.colors.accent : indicator.modelData.urgent ? Theme.colors.workspaceUrgent : indicator.occupied ? Theme.colors.workspaceOccupied : Theme.colors.workspaceEmpty
 
                     ShapePath {
                         strokeWidth: -1
@@ -59,25 +60,25 @@ Rectangle {
 
                     Behavior on dotWidth {
                         NumberAnimation {
-                            duration: 250
-                            easing.type: Easing.BezierSpline
-                            easing.bezierCurve: [0.25, 0.25, 0.75, 1, 1, 1]
+                            duration: Theme.animations.workspaceDuration
+                            easing.type: Theme.animations.workspaceEasing
+                            easing.bezierCurve: Theme.animations.workspaceCurve
                         }
                     }
 
                     Behavior on dotHeight {
                         NumberAnimation {
-                            duration: 250
-                            easing.type: Easing.BezierSpline
-                            easing.bezierCurve: [0.25, 0.25, 0.75, 1, 1, 1]
+                            duration: Theme.animations.workspaceDuration
+                            easing.type: Theme.animations.workspaceEasing
+                            easing.bezierCurve: Theme.animations.workspaceCurve
                         }
                     }
 
                     Behavior on dotColor {
                         ColorAnimation {
-                            duration: 250
-                            easing.type: Easing.BezierSpline
-                            easing.bezierCurve: [0.25, 0.25, 0.75, 1, 1, 1]
+                            duration: Theme.animations.workspaceDuration
+                            easing.type: Theme.animations.workspaceEasing
+                            easing.bezierCurve: Theme.animations.workspaceCurve
                         }
                     }
                 }

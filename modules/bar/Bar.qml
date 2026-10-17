@@ -7,8 +7,8 @@ PanelWindow {
     id: bar
     screen: Quickshell.screens.find(s => s.name === Config.preferredOutput) ?? Quickshell.screens[0]
 
-    implicitHeight: 24
-    color: 'transparent'
+    implicitHeight: Theme.bar.height
+    color: Theme.colors.transparent
     WlrLayershell.namespace: 'luja-bar'
 
     anchors {
@@ -19,16 +19,16 @@ PanelWindow {
 
     /*Row {
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: Theme.bar.edgeMargin
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 4
+        spacing: Theme.bar.spacing
 
         Memory {}
     }*/
 
     Row {
         anchors.centerIn: parent
-        spacing: 4
+        spacing: Theme.bar.spacing
 
         Clock {}
 
@@ -39,9 +39,9 @@ PanelWindow {
 
     Row {
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: Theme.bar.edgeMargin
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 4
+        spacing: Theme.bar.spacing
 
         Tray {}
         DateDisplay {}
