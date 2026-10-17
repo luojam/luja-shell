@@ -28,6 +28,7 @@ Rectangle {
         id: content
 
         anchors.centerIn: parent
+        height: parent.height
         spacing: Theme.bar.spacing
 
         Text {
@@ -35,8 +36,8 @@ Rectangle {
 
             readonly property rect inkBounds: iconMetrics.tightBoundingRect(text)
 
-            anchors.baseline: volumeText.baseline
-            anchors.baselineOffset: Math.round(volumeMetrics.inkCenter - (inkBounds.y + inkBounds.height / 2))
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: height / 2 - baselineOffset - (inkBounds.y + inkBounds.height / 2)
             width: iconMetrics.slotWidth
             horizontalAlignment: Text.AlignLeft
             transform: Translate {
@@ -78,9 +79,6 @@ Rectangle {
     FontMetrics {
         id: volumeMetrics
         font: volumeText.font
-
-        readonly property rect inkBounds: tightBoundingRect(volumeText.text)
-        readonly property real inkCenter: inkBounds.y + inkBounds.height / 2
     }
 
     MouseArea {

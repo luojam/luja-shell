@@ -13,8 +13,9 @@ Singleton {
         readonly property color text: "#cdd6f4"
         readonly property color mutedText: "#9399b2"
         readonly property color accent: "#89b4fa"
-        readonly property color workspaceUrgent: "#f38ba8"
-        readonly property color workspaceOccupied: "#bac2de"
+        readonly property color workspaceSelected: "#a3d9bb" //"#8fd5c5"
+        readonly property color workspaceUrgent: "#e7b38a"
+        readonly property color workspaceOccupied: "#89b4fa"
         readonly property color workspaceEmpty: "#585b70"
         readonly property color launcherBorder: "#45475a"
         readonly property real backgroundOpacity: 0.75
@@ -51,8 +52,8 @@ Singleton {
         id: bar
 
         readonly property int height: 24
-        readonly property int widgetHeight: 20
-        readonly property int widgetRadius: 10
+        readonly property int widgetHeight: 22
+        readonly property int widgetRadius: 8
         readonly property int widgetPadding: 8
         readonly property int trayPadding: 5
         readonly property int spacing: 4
@@ -70,8 +71,8 @@ Singleton {
         readonly property int slotSize: 18
         readonly property int activeWidth: 16
         readonly property int activeHeight: 12
-        readonly property int occupiedSize: 8
-        readonly property int emptySize: 6
+        readonly property int inactiveWidth: 6
+        readonly property int indicatorRadius: 4
     }
 
     property alias launcher: launcher
@@ -95,9 +96,9 @@ Singleton {
     QtObject {
         id: animations
 
-        readonly property int workspaceDuration: 250
+        readonly property int workspaceDuration: 200
         readonly property int workspaceEasing: Easing.BezierSpline
-        readonly property list<real> workspaceCurve: [0.25, 0.25, 0.75, 1, 1, 1]
+        readonly property list<real> workspaceCurve: [0.16, 0.80, 0.20, 1, 1, 1]
         readonly property int launcherHighlightDuration: 0
     }
 
