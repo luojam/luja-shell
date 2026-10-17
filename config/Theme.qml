@@ -13,6 +13,7 @@ Singleton {
         readonly property color text: "#cdd6f4"
         readonly property color mutedText: "#9399b2"
         readonly property color accent: "#89b4fa"
+        readonly property color critical: "#f38ba8"
         readonly property color workspaceSelected: "#a3d9bb" //"#8fd5c5"
         readonly property color workspaceUrgent: "#e7b38a"
         readonly property color workspaceOccupied: "#89b4fa"
@@ -39,6 +40,7 @@ Singleton {
         readonly property int barFontPixelSize: 13
         readonly property int volumeIconFontPixelSize: 15
         readonly property int launcherFontPointSize: 14
+        readonly property int notificationFontPointSize: 11
         readonly property int textRenderType: Text.NativeRendering
         readonly property int fontHintingPreference: Font.PreferVerticalHinting
         readonly property var fontFeatures: ({
@@ -89,6 +91,20 @@ Singleton {
         readonly property int rowRadius: 8
         readonly property int rowPadding: 12
         readonly property int iconSize: 28
+    }
+
+    property alias notifications: notifications
+
+    QtObject {
+        id: notifications
+
+        readonly property int width: 350
+        readonly property int radius: 10
+        readonly property int borderWidth: 2
+        readonly property int margin: 10
+        readonly property int padding: 12
+        readonly property int spacing: 6
+        readonly property int iconSize: 48
     }
 
     property alias animations: animations
