@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 
 Rectangle {
-    implicitWidth: dateText.implicitWidth + 20
+    implicitWidth: dateText.implicitWidth + 16
     implicitHeight: 20
     radius: 10
     color: Qt.rgba(28 / 255, 28 / 255, 28 / 255, 0.75)

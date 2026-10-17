@@ -17,6 +17,15 @@ PanelWindow {
         right: true
     }
 
+    /*Row {
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: 4
+
+        Memory {}
+    }*/
+
     Row {
         anchors.centerIn: parent
         spacing: 4
@@ -36,5 +45,6 @@ PanelWindow {
 
         DateDisplay {}
         Volume {}
+        Memory {}
     }
 }

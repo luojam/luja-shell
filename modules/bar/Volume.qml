@@ -14,7 +14,7 @@ Rectangle {
         return percentage === 0 ? "\u{f057f}" : percentage < 50 ? "\u{f0580}" : "\u{f057e}";
     }
 
-    implicitWidth: content.implicitWidth + 20
+    implicitWidth: content.implicitWidth + 16
     implicitHeight: 20
     radius: 10
     color: Qt.rgba(28 / 255, 28 / 255, 28 / 255, 0.75)
@@ -73,10 +73,7 @@ Rectangle {
         id: iconMetrics
         font: volumeIcon.font
 
-        readonly property real slotWidth: Math.ceil(Math.max(
-            tightBoundingRect("\u{f057f}").width, tightBoundingRect("\u{f0580}").width,
-            tightBoundingRect("\u{f057e}").width, tightBoundingRect("\u{f0581}").width
-        ))
+        readonly property real slotWidth: Math.ceil(Math.max(tightBoundingRect("\u{f057f}").width, tightBoundingRect("\u{f0580}").width, tightBoundingRect("\u{f057e}").width, tightBoundingRect("\u{f0581}").width))
     }
 
     FontMetrics {
@@ -91,10 +88,7 @@ Rectangle {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton
         cursorShape: Qt.PointingHandCursor
-        onClicked: Quickshell.execDetached([
-            "env", "GDK_WAYLAND_DISABLE=ext_background_effect_manager_v1",
-            "ghostty", "--gtk-single-instance=false", "--class=local.wiremix", "-e", "wiremix"
-        ])
+        onClicked: Quickshell.execDetached(["env", "GDK_WAYLAND_DISABLE=ext_background_effect_manager_v1", "ghostty", "--gtk-single-instance=false", "--class=local.wiremix", "-e", "wiremix"])
         onWheel: wheel => {
             if (!root.audio)
                 return;
