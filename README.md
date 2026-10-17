@@ -2,9 +2,6 @@
 
 Minimal-ish shell for Hyprland. Built with Quickshell.
 
-> [!NOTE]
-> Tested only on Arch Linux.
-
 ## Requirements
 
 - Quickshell, Hyprland and some basics e.g. PipeWire.

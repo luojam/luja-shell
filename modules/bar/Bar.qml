@@ -43,6 +43,7 @@ PanelWindow {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 4
 
+        Tray {}
         DateDisplay {}
         Volume {}
         Memory {}
