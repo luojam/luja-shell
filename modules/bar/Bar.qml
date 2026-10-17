@@ -35,5 +35,6 @@ PanelWindow {
         spacing: 4
 
         DateDisplay {}
+        Volume {}
     }
 }
