@@ -1,6 +1,6 @@
 import QtQuick
-import Quickshell
 import Quickshell.Services.Pipewire
+import "../../services"
 
 Rectangle {
     id: root
@@ -88,7 +88,9 @@ Rectangle {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton
         cursorShape: Qt.PointingHandCursor
-        onClicked: Quickshell.execDetached(["env", "GDK_WAYLAND_DISABLE=ext_background_effect_manager_v1", "ghostty", "--gtk-single-instance=false", "--class=local.wiremix", "-e", "wiremix"])
+        onClicked: Ghostty.launch(["wiremix"], {
+            ghosttyArguments: ["--gtk-single-instance=false", "--class=local.wiremix"]
+        })
         onWheel: wheel => {
             if (!root.audio)
                 return;
