@@ -8,11 +8,10 @@ trap '[[ -z "$temp_dir" ]] || rm -rf -- "$temp_dir"' EXIT
 trap 'exit 1' HUP INT TERM
 
 action=${1:?Missing action}
-selection=${2:-}
-entry=${selection%%$'\t'*}
+entry=${2:-}
 pin=
 
-if [[ "$action" != list ]]; then
+if [[ "$action" != list && "$action" != current ]]; then
     if [[ "$entry" =~ ^pin:([a-f0-9]{64})$ ]]; then
         pin="$pins_dir/${BASH_REMATCH[1]}"
     elif [[ ! "$entry" =~ ^[0-9]+$ ]]; then
@@ -22,10 +21,37 @@ if [[ "$action" != list ]]; then
 fi
 
 case "$action" in
+    current)
+        types=$(timeout 2 wl-paste --list-types 2>/dev/null) || exit 0
+        case $'\n'"$types"$'\n' in
+            *$'\nx-kde-passwordManagerHint\n'*) exit 0 ;;
+        esac
+
+        if ! hash=$(timeout 2 wl-paste --no-newline --type text/plain 2>/dev/null | sha256sum) &&
+            ! hash=$(timeout 2 wl-paste --no-newline --type image 2>/dev/null | sha256sum); then
+            exit 0
+        fi
+
+        hash=${hash%% *}
+        if [[ -f "$pins_dir/$hash/data" && -f "$pins_dir/$hash/preview" ]]; then
+            printf 'pin:%s\n' "$hash"
+            exit 0
+        fi
+
+        ids=$(cliphist list | cut -f1)
+        while IFS= read -r id; do
+            [[ -n "$id" ]] || continue
+            if entry_hash=$(printf '%s' "$id" | cliphist decode | sha256sum) &&
+                [[ "${entry_hash%% *}" == "$hash" ]]; then
+                printf '%s\n' "$id"
+                break
+            fi
+        done <<< "$ids"
+        ;;
     list)
         for pin in "$pins_dir"/*; do
             [[ -f "$pin/data" && -f "$pin/preview" ]] || continue
-            printf 'pin:%s\t★ ' "${pin##*/}"
+            printf 'pin:%s\t' "${pin##*/}"
             cat -- "$pin/preview"
         done
 
@@ -73,10 +99,14 @@ case "$action" in
 
             rm -r -- "$pin"
         else
+            preview=$(cliphist list | awk -F '\t' -v id="$entry" '
+                $1 == id { print substr($0, index($0, "\t") + 1); found = 1 }
+                END { if (!found) exit 1 }
+            ')
             mkdir -p -- "$pins_dir"
             temp_dir=$(mktemp -d "$pins_dir/.pin.XXXXXX")
             printf '%s' "$entry" | cliphist decode > "$temp_dir/data"
-            printf '%s\n' "${selection#*$'\t'}" > "$temp_dir/preview"
+            printf '%s\n' "$preview" > "$temp_dir/preview"
 
             hash=$(sha256sum "$temp_dir/data")
             hash=${hash%% *}

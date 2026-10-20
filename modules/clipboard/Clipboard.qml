@@ -12,6 +12,8 @@ PanelWindow {
 
     property var entries: []
     property string errorMessage: ""
+    property string currentEntryId: ""
+    property int currentRevision: 0
     readonly property var filteredEntries: filterEntries(entries, searchInput.text)
     readonly property string helperPath: Quickshell.shellPath("modules/clipboard/clipboard.sh")
 
@@ -23,6 +25,24 @@ PanelWindow {
     WlrLayershell.namespace: "luja-clipboard"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+
+    onVisibleChanged: {
+        if (!visible)
+            invalidateCurrent();
+    }
+
+    function invalidateCurrent(): void {
+        currentEntryId = "";
+        currentRevision++;
+    }
+
+    function refreshCurrent(): void {
+        if (!visible || process.running || currentProcess.running || entries.length === 0)
+            return;
+
+        currentProcess.revision = currentRevision;
+        currentProcess.exec(["bash", helperPath, "current"]);
+    }
 
     function filterEntries(history: var, query: string): var {
         const term = query.trim().toLowerCase();
@@ -54,6 +74,7 @@ PanelWindow {
             return;
 
         errorMessage = "";
+        invalidateCurrent();
         process.action = "list";
         process.exec(["bash", helperPath, "list"]);
     }
@@ -63,7 +84,6 @@ PanelWindow {
             const separator = line.indexOf("\t");
             return {
                 id: line.slice(0, separator),
-                line: line,
                 preview: line.slice(separator + 1),
                 pinned: line.startsWith("pin:")
             };
@@ -83,8 +103,9 @@ PanelWindow {
             return;
 
         errorMessage = "";
+        invalidateCurrent();
         process.action = action;
-        process.exec(["bash", helperPath, action, entry.line]);
+        process.exec(["bash", helperPath, action, entry.id]);
     }
 
     IpcHandler {
@@ -108,16 +129,39 @@ PanelWindow {
         onExited: (exitCode, exitStatus) => {
             if (exitCode !== 0 || exitStatus !== 0) {
                 root.errorMessage = action === "list" ? "Could not load clipboard history" : "Clipboard action failed";
+                Qt.callLater(root.refreshCurrent);
                 return;
             }
 
             if (action === "list") {
                 root.updateEntries(output.text);
+                Qt.callLater(root.refreshCurrent);
             } else if (action === "copy") {
                 root.visible = false;
             } else if (root.visible) {
                 Qt.callLater(root.refresh);
             }
+        }
+    }
+
+    Process {
+        id: currentProcess
+
+        property int revision: -1
+
+        stdout: StdioCollector {
+            id: currentOutput
+        }
+        stderr: StdioCollector {}
+
+        onExited: (exitCode, exitStatus) => {
+            if (revision !== root.currentRevision) {
+                Qt.callLater(root.refreshCurrent);
+                return;
+            }
+
+            if (root.visible && exitCode === 0 && exitStatus === 0)
+                root.currentEntryId = currentOutput.text.trim();
         }
     }
 
@@ -271,9 +315,40 @@ PanelWindow {
                 radius: Theme.launcher.rowRadius
                 color: ListView.isCurrentItem ? Theme.colors.launcherSelection : Theme.colors.transparent
 
+                Row {
+                    id: statusIcons
+
+                    anchors.left: parent.left
+                    anchors.leftMargin: Theme.launcher.rowPadding
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 6
+
+                    Text {
+                        objectName: "clipboardCurrentIndicator"
+
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: row.modelData.id === root.currentEntryId
+                        text: "\uf0ea"
+                        color: Theme.colors.accent
+                        font.family: Theme.typography.iconFontFamily
+                        font.pointSize: Theme.typography.launcherFontPointSize
+                        renderType: Theme.typography.textRenderType
+                    }
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: row.modelData.pinned
+                        text: "★"
+                        color: Theme.colors.clipboardPinned
+                        font.family: Theme.typography.fontFamily
+                        font.pointSize: Theme.typography.launcherFontPointSize
+                        renderType: Theme.typography.textRenderType
+                    }
+                }
+
                 Text {
                     anchors.fill: parent
-                    anchors.leftMargin: Theme.launcher.rowPadding
+                    anchors.leftMargin: Theme.launcher.rowPadding + (statusIcons.width > 0 ? statusIcons.width + 6 : 0)
                     anchors.rightMargin: Theme.launcher.rowPadding
                     verticalAlignment: Text.AlignVCenter
                     text: row.modelData.preview

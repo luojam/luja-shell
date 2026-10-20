@@ -13,6 +13,7 @@ Singleton {
         readonly property color text: "#cdd6f4"
         readonly property color mutedText: "#9399b2"
         readonly property color accent: "#89b4fa"
+        readonly property color clipboardPinned: "#f9e2af"
         readonly property color critical: "#f38ba8"
         readonly property color workspaceSelected: "#a3d9bb" //"#8fd5c5"
         readonly property color workspaceUrgent: "#e7b38a"
