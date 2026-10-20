@@ -17,15 +17,6 @@ PanelWindow {
         right: true
     }
 
-    /*Row {
-        anchors.left: parent.left
-        anchors.leftMargin: Theme.bar.edgeMargin
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: Theme.bar.spacing
-
-        Memory {}
-    }*/
-
     Row {
         anchors.centerIn: parent
         spacing: Theme.bar.spacing
@@ -46,6 +37,5 @@ PanelWindow {
         Tray {}
         DateDisplay {}
         Volume {}
-        Memory {}
     }
 }

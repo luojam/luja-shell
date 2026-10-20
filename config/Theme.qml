@@ -83,7 +83,7 @@ Singleton {
         id: launcher
 
         readonly property int width: 580
-        readonly property int height: 452
+        readonly property int height: 508
         readonly property int radius: 16
         readonly property int padding: 20
         readonly property int rowHeight: 44
