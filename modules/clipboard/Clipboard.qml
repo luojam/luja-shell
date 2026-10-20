@@ -12,6 +12,7 @@ PanelWindow {
 
     property var entries: []
     property string errorMessage: ""
+    readonly property var filteredEntries: filterEntries(entries, searchInput.text)
     readonly property string helperPath: Quickshell.shellPath("modules/clipboard/clipboard.sh")
 
     visible: false
@@ -23,6 +24,14 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
+    function filterEntries(history: var, query: string): var {
+        const term = query.trim().toLowerCase();
+        if (!term)
+            return history;
+
+        return history.filter(entry => entry.preview.toLowerCase().includes(term));
+    }
+
     function toggle(): void {
         if (visible) {
             visible = false;
@@ -32,10 +41,12 @@ PanelWindow {
         const monitorName = Hyprland.focusedMonitor?.name ?? Config.preferredOutput;
         screen = Quickshell.screens.find(s => s.name === monitorName) ?? Quickshell.screens[0];
         entries = [];
+        searchInput.text = "";
         clipboardView.currentIndex = -1;
+        clipboardView.positionViewAtBeginning();
         visible = true;
         refresh();
-        clipboardView.forceActiveFocus();
+        searchInput.forceActiveFocus();
     }
 
     function refresh(): void {
@@ -47,8 +58,27 @@ PanelWindow {
         process.exec(["bash", helperPath, "list"]);
     }
 
+    function parseEntries(text: string): var {
+        return text.split("\n").filter(line => line.indexOf("\t") > 0).map(line => {
+            const separator = line.indexOf("\t");
+            return {
+                id: line.slice(0, separator),
+                line: line,
+                preview: line.slice(separator + 1),
+                pinned: line.startsWith("pin:")
+            };
+        });
+    }
+
+    function updateEntries(text: string): void {
+        const index = clipboardView.currentIndex;
+        const selectedId = filteredEntries[index]?.id ?? "";
+        entries = parseEntries(text);
+        clipboardView.restoreSelection(selectedId, index);
+    }
+
     function perform(action: string): void {
-        const entry = entries[clipboardView.currentIndex];
+        const entry = filteredEntries[clipboardView.currentIndex];
         if (!entry || process.running || (action === "delete" && entry.pinned))
             return;
 
@@ -82,14 +112,7 @@ PanelWindow {
             }
 
             if (action === "list") {
-                const index = clipboardView.currentIndex;
-                root.entries = output.text.split("\n").filter(line => line.indexOf("\t") > 0).map(line => ({
-                    line: line,
-                    preview: line.slice(line.indexOf("\t") + 1),
-                    pinned: line.startsWith("pin:")
-                }));
-                clipboardView.currentIndex = root.entries.length > 0 ? Math.max(0, Math.min(index, root.entries.length - 1)) : -1;
-                clipboardView.positionViewAtIndex(clipboardView.currentIndex, ListView.Contain);
+                root.updateEntries(output.text);
             } else if (action === "copy") {
                 root.visible = false;
             } else if (root.visible) {
@@ -110,6 +133,80 @@ PanelWindow {
         border.color: Theme.colors.launcherBorder
         radius: Theme.launcher.radius
 
+        Rectangle {
+            id: searchBox
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: Theme.launcher.padding
+            height: Theme.launcher.rowHeight
+            radius: Theme.launcher.rowRadius
+            color: Qt.alpha(Theme.colors.launcherBorder, 0.3)
+
+            TextInput {
+                id: searchInput
+                objectName: "clipboardSearch"
+
+                anchors.fill: parent
+                anchors.leftMargin: Theme.launcher.rowPadding
+                anchors.rightMargin: Theme.launcher.rowPadding
+                verticalAlignment: TextInput.AlignVCenter
+                color: Theme.colors.text
+                selectionColor: Theme.colors.launcherSelection
+                selectedTextColor: Theme.colors.text
+                font.family: Theme.typography.fontFamily
+                font.pointSize: Theme.typography.launcherFontPointSize
+                renderType: Theme.typography.textRenderType
+                clip: true
+                selectByMouse: true
+                focus: true
+
+                Keys.onUpPressed: clipboardView.moveSelection(-1)
+                Keys.onDownPressed: clipboardView.moveSelection(1)
+                Keys.onLeftPressed: event => {
+                    if (text.length === 0)
+                        clipboardView.movePage(-1);
+                    else
+                        event.accepted = false;
+                }
+                Keys.onRightPressed: event => {
+                    if (text.length === 0)
+                        clipboardView.movePage(1);
+                    else
+                        event.accepted = false;
+                }
+                Keys.onEscapePressed: root.visible = false
+                Keys.onReturnPressed: root.perform("copy")
+                Keys.onEnterPressed: root.perform("copy")
+                Keys.onDeletePressed: event => {
+                    if (text.length === 0 || (event.modifiers & Qt.AltModifier))
+                        root.perform("delete");
+                    else
+                        event.accepted = false;
+                }
+                Keys.onPressed: event => {
+                    if (event.key === Qt.Key_PageUp || event.key === Qt.Key_PageDown) {
+                        clipboardView.movePage(event.key === Qt.Key_PageUp ? -1 : 1);
+                        event.accepted = true;
+                    } else if (event.key === Qt.Key_P && (event.modifiers & Qt.AltModifier)) {
+                        root.perform("pin");
+                        event.accepted = true;
+                    }
+                }
+
+                Text {
+                    anchors.fill: parent
+                    verticalAlignment: Text.AlignVCenter
+                    visible: searchInput.text.length === 0
+                    text: "Search clipboard history…"
+                    color: Theme.colors.mutedText
+                    font: searchInput.font
+                    renderType: Theme.typography.textRenderType
+                }
+            }
+        }
+
         ListView {
             id: clipboardView
             objectName: "clipboardEntries"
@@ -117,16 +214,43 @@ PanelWindow {
             readonly property int rowHeight: Theme.launcher.rowHeight
             readonly property int pageSize: Math.max(1, Math.floor((height + spacing) / (rowHeight + spacing)))
 
-            anchors.fill: parent
+            anchors.top: searchBox.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
             anchors.margins: Theme.launcher.padding
-            model: root.entries
+            anchors.topMargin: Theme.launcher.rowPadding
+            model: root.filteredEntries
             spacing: Theme.launcher.rowSpacing
             clip: true
-            focus: true
-            keyNavigationEnabled: true
+            keyNavigationEnabled: false
             keyNavigationWraps: false
             boundsBehavior: Flickable.StopAtBounds
             highlightMoveDuration: Theme.animations.launcherHighlightDuration
+
+            onModelChanged: {
+                currentIndex = root.filteredEntries.length > 0 ? 0 : -1;
+                positionViewAtBeginning();
+            }
+
+            function restoreSelection(id: string, previousIndex: int): void {
+                if (count === 0) {
+                    currentIndex = -1;
+                    return;
+                }
+
+                const index = root.filteredEntries.findIndex(entry => entry.id === id);
+                currentIndex = index >= 0 ? index : Math.max(0, Math.min(previousIndex, count - 1));
+                positionViewAtIndex(currentIndex, ListView.Contain);
+            }
+
+            function moveSelection(direction: int): void {
+                if (count === 0)
+                    return;
+
+                currentIndex = Math.max(0, Math.min(count - 1, currentIndex + direction));
+                positionViewAtIndex(currentIndex, ListView.Contain);
+            }
 
             function movePage(direction: int): void {
                 if (count === 0)
@@ -134,19 +258,6 @@ PanelWindow {
 
                 currentIndex = Math.max(0, Math.min(count - 1, currentIndex + direction * pageSize));
                 positionViewAtIndex(Math.floor(currentIndex / pageSize) * pageSize, ListView.Beginning);
-            }
-
-            Keys.onLeftPressed: movePage(-1)
-            Keys.onRightPressed: movePage(1)
-            Keys.onEscapePressed: root.visible = false
-            Keys.onReturnPressed: root.perform("copy")
-            Keys.onEnterPressed: root.perform("copy")
-            Keys.onDeletePressed: root.perform("delete")
-            Keys.onPressed: event => {
-                if (event.key === Qt.Key_P && (event.modifiers & Qt.AltModifier)) {
-                    root.perform("pin");
-                    event.accepted = true;
-                }
             }
 
             delegate: Rectangle {
@@ -185,14 +296,21 @@ PanelWindow {
         }
 
         Rectangle {
-            anchors.fill: parent
-            anchors.margins: Theme.launcher.padding
+            anchors.fill: clipboardView
             visible: root.errorMessage !== "" || clipboardView.count === 0
             color: Theme.colors.launcherBackground
 
             Text {
                 anchors.centerIn: parent
-                text: root.errorMessage || (process.running ? "Loading clipboard history…" : "Clipboard history is empty")
+                text: {
+                    if (root.errorMessage)
+                        return root.errorMessage;
+                    if (process.running)
+                        return "Loading clipboard history…";
+                    if (searchInput.text.trim())
+                        return "No matching clipboard entries";
+                    return "Clipboard history is empty";
+                }
                 color: Theme.colors.mutedText
                 font.family: Theme.typography.fontFamily
                 font.pointSize: Theme.typography.launcherFontPointSize
