@@ -19,7 +19,7 @@ Rectangle {
     radius: Theme.notifications.radius
     color: Theme.colors.launcherBackground
     border.width: Theme.notifications.borderWidth
-    border.color: critical ? Theme.colors.critical : Theme.colors.accent
+    border.color: critical ? Theme.colors.critical : Theme.colors.launcherBorder
 
     function activate(): void {
         const action = actions.find(action => action.identifier === "default");
@@ -146,7 +146,7 @@ Rectangle {
                     height: label.implicitHeight + Theme.notifications.spacing * 2
                     radius: Theme.notifications.spacing
                     color: mouse.containsMouse ? Theme.colors.launcherSelection : Theme.colors.transparent
-                    border.color: Theme.colors.accent
+                    border.color: Theme.colors.launcherBorder
 
                     Connections {
                         target: button.modelData

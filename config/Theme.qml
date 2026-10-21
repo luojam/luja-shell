@@ -101,7 +101,7 @@ Singleton {
 
         readonly property int width: 350
         readonly property int radius: 10
-        readonly property int borderWidth: 2
+        readonly property int borderWidth: 1
         readonly property int margin: 10
         readonly property int padding: 12
         readonly property int spacing: 6
