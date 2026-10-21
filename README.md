@@ -33,11 +33,6 @@ git clone https://github.com/luojam/luja-shell.git ~/.config/quickshell/luja-she
 quickshell -p ~/.config/quickshell/luja-shell
 ```
 
-## Configuration
-
-- [config/Config.qml](config/Config.qml)
-- [config/Theme.qml](config/Theme.qml)
-
 ### Hyprland Startup
 
 Add these to `hyprland.start` in `~/.config/hypr/hyprland.lua` to automatically launch quickshell and set up clipboard history.
@@ -48,6 +43,20 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type text/plain --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
+```
+
+## Configuration
+
+- [config/Config.qml](config/Config.qml)
+- [config/Theme.qml](config/Theme.qml)
+
+### Wallpaper
+
+Set the wallpaper for all monitors:
+
+```sh
+ln -sfn ~/Pictures/your-wallpaper.png "${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/wallpaper"
+quickshell ipc --config luja-shell call wallpaper reload
 ```
 
 ### Keybinds
