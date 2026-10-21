@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell.Services.Pipewire
-import "../../services"
+import "../../helpers"
 import "../../config"
 
 Rectangle {

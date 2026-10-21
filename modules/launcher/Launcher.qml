@@ -6,7 +6,7 @@ import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Wayland
 import "../../config"
-import "../../services"
+import "../../helpers"
 
 PanelWindow {
     id: root
