@@ -99,7 +99,7 @@ PanelWindow {
 
     function perform(action: string): void {
         const entry = filteredEntries[clipboardView.currentIndex];
-        if (!entry || process.running || (action === "delete" && entry.pinned))
+        if (!entry || errorMessage !== "" || process.running || (action === "delete" && entry.pinned))
             return;
 
         errorMessage = "";
@@ -265,6 +265,7 @@ PanelWindow {
             anchors.margins: Theme.launcher.padding
             anchors.topMargin: Theme.launcher.rowPadding
             model: root.filteredEntries
+            visible: root.errorMessage === ""
             spacing: Theme.launcher.rowSpacing
             clip: true
             keyNavigationEnabled: false
@@ -370,26 +371,22 @@ PanelWindow {
             }
         }
 
-        Rectangle {
-            anchors.fill: clipboardView
+        Text {
+            anchors.centerIn: clipboardView
             visible: root.errorMessage !== "" || clipboardView.count === 0
-            color: Theme.colors.launcherBackground
-
-            Text {
-                anchors.centerIn: parent
-                text: {
-                    if (root.errorMessage)
-                        return root.errorMessage;
-                    if (process.running)
-                        return "Loading clipboard history…";
-                    if (searchInput.text.trim())
-                        return "No matching clipboard entries";
-                    return "Clipboard history is empty";
-                }
-                color: Theme.colors.mutedText
-                font.family: Theme.typography.fontFamily
-                font.pointSize: Theme.typography.launcherFontPointSize
+            text: {
+                if (root.errorMessage)
+                    return root.errorMessage;
+                if (process.running)
+                    return "Loading clipboard history…";
+                if (searchInput.text.trim())
+                    return "No matching clipboard entries";
+                return "Clipboard history is empty";
             }
+            color: Theme.colors.mutedText
+            font.family: Theme.typography.fontFamily
+            font.pointSize: Theme.typography.launcherFontPointSize
+            renderType: Theme.typography.textRenderType
         }
     }
 }

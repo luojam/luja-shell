@@ -260,6 +260,7 @@ PanelWindow {
             color: Theme.colors.mutedText
             font.family: Theme.typography.fontFamily
             font.pointSize: Theme.typography.launcherFontPointSize
+            renderType: Theme.typography.textRenderType
         }
     }
 }
