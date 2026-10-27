@@ -45,6 +45,10 @@ hl.on("hyprland.start", function()
 end)
 ```
 
+### Top bar
+
+Click the time to expand or collapse the top bar.
+
 ## Configuration
 
 - [config/Config.qml](config/Config.qml)

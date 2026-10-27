@@ -14,6 +14,7 @@ Variants {
     PanelWindow {
         id: bar
         required property ShellScreen modelData
+        property bool expanded: false
 
         screen: modelData
         implicitHeight: Theme.bar.height
@@ -26,11 +27,26 @@ Variants {
             right: true
         }
 
+        DateDisplay {
+            anchors.right: core.left
+            anchors.rightMargin: Theme.bar.spacing
+            anchors.verticalCenter: core.verticalCenter
+            visible: bar.expanded
+        }
+
         Row {
+            id: core
+
             anchors.centerIn: parent
             spacing: Theme.bar.spacing
 
-            Clock {}
+            Clock {
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: bar.expanded = !bar.expanded
+                }
+            }
 
             Workspaces {
                 screen: bar.screen
@@ -38,14 +54,16 @@ Variants {
         }
 
         Row {
-            anchors.right: parent.right
-            anchors.rightMargin: Theme.bar.edgeMargin
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: core.right
+            anchors.leftMargin: Theme.bar.spacing
+            anchors.verticalCenter: core.verticalCenter
             spacing: Theme.bar.spacing
 
+            Volume {
+                visible: bar.expanded
+            }
+
             Tray {}
-            DateDisplay {}
-            Volume {}
         }
     }
 }
