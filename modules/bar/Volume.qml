@@ -9,6 +9,7 @@ Rectangle {
     readonly property PwNode sink: Pipewire.defaultAudioSink
     readonly property PwNodeAudio audio: sink?.ready ? sink.audio : null
     readonly property int percentage: audio ? Math.round(audio.volume * 100) : 0
+    readonly property bool recentlyChanged: feedbackTimer.running
     readonly property string icon: {
         if (!audio || audio.muted)
             return "\u{f0581}";
@@ -22,6 +23,23 @@ Rectangle {
 
     PwObjectTracker {
         objects: [root.sink]
+    }
+
+    Connections {
+        target: root.audio
+
+        function onVolumeChanged() {
+            feedbackTimer.restart();
+        }
+
+        function onMutedChanged() {
+            feedbackTimer.restart();
+        }
+    }
+
+    Timer {
+        id: feedbackTimer
+        interval: 2000
     }
 
     Row {

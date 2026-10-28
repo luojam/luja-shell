@@ -60,7 +60,8 @@ Variants {
             spacing: Theme.bar.spacing
 
             Volume {
-                visible: bar.expanded
+                id: volume
+                visible: bar.expanded || volume.recentlyChanged
             }
 
             Tray {}
