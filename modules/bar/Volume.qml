@@ -10,6 +10,8 @@ Rectangle {
     readonly property PwNodeAudio audio: sink?.ready ? sink.audio : null
     readonly property int percentage: audio ? Math.round(audio.volume * 100) : 0
     readonly property bool recentlyChanged: feedbackTimer.running
+    readonly property bool muted: audio?.muted ?? false
+    property bool iconOnly: false
     readonly property string icon: {
         if (!audio || audio.muted)
             return "\u{f0581}";
@@ -73,6 +75,7 @@ Rectangle {
         Text {
             id: volumeText
 
+            visible: !root.iconOnly
             anchors.verticalCenter: parent.verticalCenter
             width: Math.max(volumeMetrics.advanceWidth("99%"), volumeMetrics.advanceWidth("MAX"), volumeMetrics.advanceWidth(text))
             horizontalAlignment: Text.AlignRight

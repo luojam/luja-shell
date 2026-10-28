@@ -70,7 +70,8 @@ Variants {
 
             Volume {
                 id: volume
-                visible: bar.expanded || volume.recentlyChanged
+                visible: bar.expanded || volume.recentlyChanged || volume.muted
+                iconOnly: !bar.expanded && volume.muted
             }
 
             Tray {
