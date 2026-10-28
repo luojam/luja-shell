@@ -9,9 +9,10 @@ import "../../config"
 Rectangle {
     id: root
 
+    readonly property bool hasItems: SystemTray.items.values.length > 0
+
     implicitWidth: trayRow.implicitWidth + Theme.bar.trayPadding * 2
     implicitHeight: Theme.bar.widgetHeight
-    visible: SystemTray.items.values.length > 0
     radius: Theme.bar.widgetRadius
     color: Theme.colors.barBackground
 

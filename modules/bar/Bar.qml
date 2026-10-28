@@ -73,7 +73,10 @@ Variants {
                 visible: bar.expanded || volume.recentlyChanged
             }
 
-            Tray {}
+            Tray {
+                id: tray
+                visible: bar.expanded && tray.hasItems
+            }
         }
     }
 }
