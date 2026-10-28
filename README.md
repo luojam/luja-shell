@@ -47,7 +47,7 @@ end)
 
 ### Top bar
 
-Click the time to expand or collapse the top bar.
+Click the time to expand or collapse the top bar, or bind `quickshell ipc --config luja-shell call bar toggle` to a key (see [Keybinds](#keybinds)).
 
 ## Configuration
 
@@ -70,8 +70,9 @@ You can (and should) bind commands from this section to keys of your choice in `
 **Example binding**
 
 ```lua
-hl.bind("SUPER + Super_L", hl.dsp.exec_cmd("quickshell ipc --config luja-shell call launcher toggle"), { release = true }) -- App launcher - !important BIND this
-hl.bind("SUPER + V", hl.dsp.exec_cmd("quickshell ipc --config luja-shell call clipboard toggle"))                          -- Clipboard history
+hl.bind("SUPER + D", hl.dsp.exec_cmd("quickshell ipc --config luja-shell call launcher toggle"))  -- App launcher - !important BIND this
+hl.bind("SUPER + V", hl.dsp.exec_cmd("quickshell ipc --config luja-shell call clipboard toggle")) -- Clipboard history
+hl.bind("SUPER + T", hl.dsp.exec_cmd("quickshell ipc --config luja-shell call bar toggle"))       -- Expand/collapse top bar
 ```
 
 **Commands to bind**
@@ -79,6 +80,7 @@ hl.bind("SUPER + V", hl.dsp.exec_cmd("quickshell ipc --config luja-shell call cl
 ```sh
 quickshell ipc --config luja-shell call launcher toggle             # App launcher - !important BIND this
 quickshell ipc --config luja-shell call clipboard toggle            # Clipboard history
+quickshell ipc --config luja-shell call bar toggle                  # Expand/collapse top bar
 quickshell ipc --config luja-shell call notifications dismiss       # <Optional> dismiss a notification
 quickshell ipc --config luja-shell call notifications dismissAll    # <Optional> dismiss all notifications
 ```

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import "../../config"
 
@@ -25,6 +26,14 @@ Variants {
             top: true
             left: true
             right: true
+        }
+
+        IpcHandler {
+            target: "bar"
+
+            function toggle(): void {
+                bar.expanded = !bar.expanded;
+            }
         }
 
         DateDisplay {
