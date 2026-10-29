@@ -48,7 +48,8 @@ Variants {
             x: (parent.width - content.coreBounds.width) / 2 - content.coreBounds.x
             anchors.verticalCenter: parent.verticalCenter
             width: content.width
-            height: content.height
+            height: bar.height
+            collapsedHeight: content.height
             radius: Theme.bar.widgetRadius
             color: Theme.colors.barBackground
             expansion: bar.expansion
@@ -58,6 +59,7 @@ Variants {
             BarContent {
                 id: content
 
+                anchors.verticalCenter: parent.verticalCenter
                 screen: bar.screen
                 expansion: bar.expansion
                 onToggleRequested: bar.expanded = !bar.expanded
