@@ -10,6 +10,7 @@ Item {
     default property alias contentData: content.data
     required property list<rect> collapsedPills
     property real collapsedHeight: height
+    readonly property real contentOffset: height - collapsedHeight
     property real expansionOrigin: width / 2
     property real expansion: 0
     property real radius: 0
@@ -29,7 +30,7 @@ Item {
                     required property rect modelData
 
                     x: modelData.x
-                    y: modelData.y + (root.height - root.collapsedHeight) / 2
+                    y: modelData.y + root.contentOffset
                     width: modelData.width
                     height: modelData.height
                     radius: root.radius
@@ -45,7 +46,7 @@ Item {
                 readonly property real topInset: cornerRadius * (1 - root.expansion) - root.shoulderRadius * root.expansion
                 readonly property real topDepth: cornerRadius * (1 - root.expansion) + root.shoulderRadius * root.expansion
 
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.bottom: parent.bottom
                 x: root.expansionOrigin * (1 - root.expansion)
                 width: root.width * root.expansion
                 height: root.collapsedHeight + (root.height - root.collapsedHeight) * root.expansion
@@ -106,8 +107,8 @@ Item {
 
             x: -root.shoulderRadius - 1
             y: -1
-            width: root.width + 2 * (root.shoulderRadius + 1)
-            height: root.height + 2
+            width: Math.ceil((root.width + 2 * (root.shoulderRadius + 1)) * Screen.devicePixelRatio) / Screen.devicePixelRatio
+            height: Math.ceil((root.height + 2) * Screen.devicePixelRatio) / Screen.devicePixelRatio
             sourceRect: Qt.rect(x, y, width, height)
             sourceItem: silhouette
             hideSource: true

@@ -27,8 +27,6 @@ Row {
         return pills;
     }
 
-    signal toggleRequested()
-
     height: Theme.bar.widgetHeight
     spacing: Theme.bar.spacing
 
@@ -54,12 +52,6 @@ Row {
         Clock {
             id: clock
             color: Theme.colors.transparent
-
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: root.toggleRequested()
-            }
         }
 
         Workspaces {

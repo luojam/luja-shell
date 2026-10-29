@@ -49,7 +49,6 @@ Rectangle {
 
         anchors.centerIn: parent
         height: parent.height
-        spacing: Theme.bar.spacing * root.detailProgress
 
         Text {
             id: volumeIcon
@@ -74,7 +73,7 @@ Rectangle {
 
         Item {
             anchors.verticalCenter: parent.verticalCenter
-            width: volumeText.width * root.detailProgress
+            width: (Theme.bar.spacing + volumeText.width) * root.detailProgress
             height: parent.height
             visible: width > 0
             clip: true
@@ -82,6 +81,7 @@ Rectangle {
             Text {
                 id: volumeText
 
+                x: Theme.bar.spacing
                 anchors.verticalCenter: parent.verticalCenter
                 width: Math.max(volumeMetrics.advanceWidth("99%"), volumeMetrics.advanceWidth("MAX"), volumeMetrics.advanceWidth(text))
                 horizontalAlignment: Text.AlignRight

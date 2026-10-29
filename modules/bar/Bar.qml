@@ -45,6 +45,8 @@ Variants {
         }
 
         BarSurface {
+            id: surface
+
             x: (parent.width - content.coreBounds.width) / 2 - content.coreBounds.x
             anchors.verticalCenter: parent.verticalCenter
             width: content.width
@@ -59,10 +61,9 @@ Variants {
             BarContent {
                 id: content
 
-                anchors.verticalCenter: parent.verticalCenter
+                y: surface.contentOffset
                 screen: bar.screen
                 expansion: bar.expansion
-                onToggleRequested: bar.expanded = !bar.expanded
             }
         }
     }

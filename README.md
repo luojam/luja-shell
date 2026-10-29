@@ -47,7 +47,7 @@ end)
 
 ### Top bar
 
-Click the time to expand or collapse the top bar, or bind `quickshell ipc --config luja-shell call bar toggle` to a key (see [Keybinds](#keybinds)).
+Bind `quickshell ipc --config luja-shell call bar toggle` to a key to expand or collapse the top bar (see [Keybinds](#keybinds)).
 
 ## Configuration
 
