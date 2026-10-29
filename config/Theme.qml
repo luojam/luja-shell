@@ -94,6 +94,7 @@ Singleton {
         readonly property int searchHeight: 44
         readonly property int sectionSpacing: 12
         readonly property int rowHeight: 44
+        readonly property int clipboardImageRowHeight: rowHeight * 3 + rowSpacing * 2
         readonly property int rowSpacing: 2
         readonly property int rowRadius: 8
         readonly property int rowPadding: 12

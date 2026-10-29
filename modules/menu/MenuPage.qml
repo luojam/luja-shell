@@ -12,6 +12,7 @@ FocusScope {
     property alias listView: results
     property alias model: results.model
     property alias delegate: results.delegate
+    property var entryHeight: index => Theme.menu.rowHeight
     property string placeholder: ""
     property string emptyMessage: ""
     property string errorMessage: ""
@@ -100,8 +101,6 @@ FocusScope {
             ListView {
                 id: results
 
-                readonly property int pageSize: Math.max(1, Math.floor((height + spacing) / (Theme.menu.rowHeight + spacing)))
-
                 anchors.fill: parent
                 visible: root.errorMessage === ""
                 spacing: Theme.menu.rowSpacing
@@ -128,8 +127,18 @@ FocusScope {
                     if (count === 0)
                         return;
 
-                    currentIndex = Math.max(0, Math.min(count - 1, currentIndex + direction * pageSize));
-                    positionViewAtIndex(Math.floor(currentIndex / pageSize) * pageSize, ListView.Beginning);
+                    let target = Math.max(0, currentIndex);
+                    let distance = 0;
+                    while (target + direction >= 0 && target + direction < count) {
+                        const next = target + direction;
+                        const step = root.entryHeight(direction > 0 ? target : next) + spacing;
+                        if (distance + step > height + spacing && target !== currentIndex)
+                            break;
+                        distance += step;
+                        target = next;
+                    }
+                    currentIndex = target;
+                    positionViewAtIndex(currentIndex, ListView.Beginning);
                 }
             }
 

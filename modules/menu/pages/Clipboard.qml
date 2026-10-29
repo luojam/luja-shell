@@ -73,9 +73,12 @@ FocusScope {
     function parseEntries(text: string): var {
         return text.split("\n").filter(line => line.indexOf("\t") > 0).map(line => {
             const separator = line.indexOf("\t");
+            const preview = line.slice(separator + 1);
+            const image = /^\[\[ binary data (.+) (png|jpeg|gif|bmp|tiff|webp) (\d+)x(\d+) \]\]$/.exec(preview);
             return {
                 id: line.slice(0, separator),
-                preview: line.slice(separator + 1),
+                preview: preview,
+                image: image ? { size: image[1], format: image[2], width: image[3], height: image[4] } : null,
                 pinned: line.startsWith("pin:")
             };
         });
@@ -165,6 +168,7 @@ FocusScope {
         listView.objectName: "clipboardEntries"
         placeholder: "Search clipboard history…"
         model: root.filteredEntries
+        entryHeight: index => root.filteredEntries[index]?.image ? Theme.menu.clipboardImageRowHeight : Theme.menu.rowHeight
         errorMessage: root.errorMessage
         emptyMessage: {
             if (process.running)
@@ -191,7 +195,7 @@ FocusScope {
             required property int index
 
             width: page.listView.width
-            height: Theme.menu.rowHeight
+            height: page.entryHeight(index)
             radius: Theme.menu.rowRadius
             color: ListView.isCurrentItem ? Theme.colors.menuSelection : Theme.colors.transparent
 
@@ -226,18 +230,45 @@ FocusScope {
                 }
             }
 
-            Text {
+            Item {
                 anchors.fill: parent
                 anchors.leftMargin: Theme.menu.rowPadding + (statusIcons.width > 0 ? statusIcons.width + 6 : 0)
                 anchors.rightMargin: Theme.menu.rowPadding
-                verticalAlignment: Text.AlignVCenter
-                text: row.modelData.preview
-                textFormat: Text.PlainText
-                color: Theme.colors.text
-                font.family: Theme.typography.fontFamily
-                font.pointSize: Theme.typography.menuFontPointSize
-                elide: Text.ElideRight
-                renderType: Theme.typography.textRenderType
+
+                Loader {
+                    id: imagePreview
+
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.topMargin: Theme.menu.rowPadding
+                    anchors.bottomMargin: Theme.menu.rowPadding
+                    width: parent.width * 0.6
+                    active: root.visible && row.modelData.image !== null
+                    sourceComponent: ClipboardImage {
+                        entryId: row.modelData.id
+                        helperPath: root.helperPath
+                    }
+                }
+
+                Text {
+                    anchors.left: parent.left
+                    anchors.leftMargin: row.modelData.image ? (imagePreview.item?.previewWidth ?? imagePreview.width) + Theme.menu.rowPadding : 0
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    verticalAlignment: Text.AlignVCenter
+                    text: {
+                        const image = row.modelData.image;
+                        return image ? image.format.toUpperCase() + " · " + image.width + " × " + image.height + " · " + image.size : row.modelData.preview;
+                    }
+                    textFormat: Text.PlainText
+                    color: Theme.colors.text
+                    font.family: Theme.typography.fontFamily
+                    font.pointSize: Theme.typography.menuFontPointSize
+                    elide: Text.ElideRight
+                    renderType: Theme.typography.textRenderType
+                }
             }
 
             MouseArea {
