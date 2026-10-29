@@ -84,7 +84,9 @@ Singleton {
         id: menu
 
         readonly property int width: 580
-        readonly property int height: 532
+        readonly property int visibleRows: 9
+        readonly property int height: padding * 3 + tabDotSize + searchHeight + sectionSpacing
+                                      + visibleRows * rowHeight + (visibleRows - 1) * rowSpacing
         readonly property int radius: 16
         readonly property int padding: 16
         readonly property int tabDotSize: 8
