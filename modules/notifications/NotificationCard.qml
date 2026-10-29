@@ -17,9 +17,9 @@ Rectangle {
 
     implicitHeight: content.implicitHeight + Theme.notifications.padding * 2
     radius: Theme.notifications.radius
-    color: Theme.colors.launcherBackground
+    color: Theme.colors.menuBackground
     border.width: Theme.notifications.borderWidth
-    border.color: critical ? Theme.colors.critical : Theme.colors.launcherBorder
+    border.color: critical ? Theme.colors.critical : Theme.colors.menuBorder
 
     function activate(): void {
         const action = actions.find(action => action.identifier === "default");
@@ -145,8 +145,8 @@ Rectangle {
                     width: Math.min(content.width, label.implicitWidth + Theme.notifications.padding * 2)
                     height: label.implicitHeight + Theme.notifications.spacing * 2
                     radius: Theme.notifications.spacing
-                    color: mouse.containsMouse ? Theme.colors.launcherSelection : Theme.colors.transparent
-                    border.color: Theme.colors.launcherBorder
+                    color: mouse.containsMouse ? Theme.colors.menuSelection : Theme.colors.transparent
+                    border.color: Theme.colors.menuBorder
 
                     Connections {
                         target: button.modelData

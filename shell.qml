@@ -3,15 +3,13 @@
 
 import Quickshell
 import "modules/bar"
-import "modules/clipboard"
-import "modules/launcher"
+import "modules/menu"
 import "modules/notifications"
 import "modules/wallpaper"
 
 ShellRoot {
     Wallpaper {}
     Bar {}
-    Clipboard {}
-    Launcher {}
+    Menu {}
     Notifications {}
 }

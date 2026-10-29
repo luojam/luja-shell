@@ -19,11 +19,11 @@ Singleton {
         readonly property color workspaceUrgent: "#e7b38a"
         readonly property color workspaceOccupied: "#89b4fa"
         readonly property color workspaceEmpty: "#585b70"
-        readonly property color launcherBorder: "#45475a"
+        readonly property color menuBorder: "#45475a"
         readonly property real backgroundOpacity: 0.75
         readonly property color barBackground: Qt.rgba(28 / 255, 28 / 255, 28 / 255, backgroundOpacity)
-        readonly property color launcherBackground: Qt.rgba(30 / 255, 30 / 255, 46 / 255, backgroundOpacity)
-        readonly property color launcherSelection: Qt.alpha(accent, 0.18)
+        readonly property color menuBackground: Qt.rgba(30 / 255, 30 / 255, 46 / 255, backgroundOpacity)
+        readonly property color menuSelection: Qt.alpha(accent, 0.18)
         readonly property color tooltipText: systemPalette.windowText
         readonly property color tooltipBackground: systemPalette.window
         readonly property color tooltipBorder: systemPalette.dark
@@ -40,7 +40,7 @@ Singleton {
         readonly property string iconFontStyle: "Regular"
         readonly property int barFontPixelSize: 13
         readonly property int volumeIconFontPixelSize: 15
-        readonly property int launcherFontPointSize: 14
+        readonly property int menuFontPointSize: 14
         readonly property int notificationFontPointSize: 11
         readonly property int textRenderType: Text.NativeRendering
         readonly property int fontHintingPreference: Font.PreferVerticalHinting
@@ -78,15 +78,19 @@ Singleton {
         readonly property int indicatorRadius: 4
     }
 
-    property alias launcher: launcher
+    property alias menu: menu
 
     QtObject {
-        id: launcher
+        id: menu
 
         readonly property int width: 580
-        readonly property int height: 508
+        readonly property int height: 532
         readonly property int radius: 16
-        readonly property int padding: 20
+        readonly property int padding: 16
+        readonly property int tabDotSize: 8
+        readonly property int tabDotSpacing: 16
+        readonly property int searchHeight: 44
+        readonly property int sectionSpacing: 12
         readonly property int rowHeight: 44
         readonly property int rowSpacing: 2
         readonly property int rowRadius: 8
@@ -117,7 +121,7 @@ Singleton {
         readonly property int workspaceDuration: 200
         readonly property int workspaceEasing: Easing.BezierSpline
         readonly property list<real> workspaceCurve: [0.16, 0.80, 0.20, 1, 1, 1]
-        readonly property int launcherHighlightDuration: 0
+        readonly property int menuHighlightDuration: 0
     }
 
     SystemPalette {
