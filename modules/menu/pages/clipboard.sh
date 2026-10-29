@@ -63,6 +63,13 @@ case "$action" in
             fi
         fi
         ;;
+    image)
+        if [[ -n "$pin" ]]; then
+            base64 --wrap=0 < "$pin/data"
+        else
+            printf '%s' "$entry" | cliphist decode | base64 --wrap=0
+        fi
+        ;;
     copy)
         if [[ -n "$pin" ]]; then
             wl-copy < "$pin/data"

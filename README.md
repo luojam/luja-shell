@@ -49,6 +49,12 @@ end)
 
 Bind `quickshell ipc --config luja-shell call bar toggle` to a key to expand or collapse the top bar (see [Keybinds](#keybinds)).
 
+### Clipboard history
+
+Supports image previews and does not store passwords flagged with `x-kde-passwordManagerHint`.
+
+`Alt`+`P` pins an entry and `Alt`+`Delete` removes an unpinned entry.
+
 ## Configuration
 
 - [config/Config.qml](config/Config.qml)
