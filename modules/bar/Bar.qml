@@ -16,6 +16,14 @@ Variants {
         id: bar
         required property ShellScreen modelData
         property bool expanded: false
+        property real expansion: expanded ? 1 : 0
+
+        Behavior on expansion {
+            NumberAnimation {
+                duration: Theme.animations.barDuration
+                easing.type: Easing.InOutCubic
+            }
+        }
 
         screen: modelData
         implicitHeight: Theme.bar.height
@@ -36,47 +44,23 @@ Variants {
             }
         }
 
-        DateDisplay {
-            anchors.right: core.left
-            anchors.rightMargin: Theme.bar.spacing
-            anchors.verticalCenter: core.verticalCenter
-            visible: bar.expanded
-        }
+        BarSurface {
+            x: (parent.width - content.coreBounds.width) / 2 - content.coreBounds.x
+            anchors.verticalCenter: parent.verticalCenter
+            width: content.width
+            height: content.height
+            radius: Theme.bar.widgetRadius
+            color: Theme.colors.barBackground
+            expansion: bar.expansion
+            collapsedPills: content.collapsedPills
+            expansionOrigin: content.coreBounds.x + content.coreBounds.width / 2
 
-        Row {
-            id: core
+            BarContent {
+                id: content
 
-            anchors.centerIn: parent
-            spacing: Theme.bar.spacing
-
-            Clock {
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: bar.expanded = !bar.expanded
-                }
-            }
-
-            Workspaces {
                 screen: bar.screen
-            }
-        }
-
-        Row {
-            anchors.left: core.right
-            anchors.leftMargin: Theme.bar.spacing
-            anchors.verticalCenter: core.verticalCenter
-            spacing: Theme.bar.spacing
-
-            Volume {
-                id: volume
-                visible: bar.expanded || volume.recentlyChanged || volume.muted
-                iconOnly: !bar.expanded && volume.muted
-            }
-
-            Tray {
-                id: tray
-                visible: bar.expanded && tray.hasItems
+                expansion: bar.expansion
+                onToggleRequested: bar.expanded = !bar.expanded
             }
         }
     }

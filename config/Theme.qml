@@ -113,6 +113,7 @@ Singleton {
     QtObject {
         id: animations
 
+        readonly property int barDuration: 250
         readonly property int workspaceDuration: 200
         readonly property int workspaceEasing: Easing.BezierSpline
         readonly property list<real> workspaceCurve: [0.16, 0.80, 0.20, 1, 1, 1]

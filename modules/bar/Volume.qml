@@ -11,7 +11,7 @@ Rectangle {
     readonly property int percentage: audio ? Math.round(audio.volume * 100) : 0
     readonly property bool recentlyChanged: feedbackTimer.running
     readonly property bool muted: audio?.muted ?? false
-    property bool iconOnly: false
+    property real detailProgress: 1
     readonly property string icon: {
         if (!audio || audio.muted)
             return "\u{f0581}";
@@ -49,7 +49,7 @@ Rectangle {
 
         anchors.centerIn: parent
         height: parent.height
-        spacing: Theme.bar.spacing
+        spacing: Theme.bar.spacing * root.detailProgress
 
         Text {
             id: volumeIcon
@@ -72,21 +72,28 @@ Rectangle {
             font.hintingPreference: Theme.typography.fontHintingPreference
         }
 
-        Text {
-            id: volumeText
-
-            visible: !root.iconOnly
+        Item {
             anchors.verticalCenter: parent.verticalCenter
-            width: Math.max(volumeMetrics.advanceWidth("99%"), volumeMetrics.advanceWidth("MAX"), volumeMetrics.advanceWidth(text))
-            horizontalAlignment: Text.AlignRight
-            text: !root.audio ? "—" : root.percentage === 100 ? "MAX" : root.percentage + "%"
-            color: Theme.colors.text
-            renderType: Theme.typography.textRenderType
-            font.family: Theme.typography.fontFamily
-            font.styleName: Theme.typography.barFontStyle
-            font.pixelSize: Theme.typography.barFontPixelSize
-            font.hintingPreference: Theme.typography.fontHintingPreference
-            font.features: Theme.typography.fontFeatures
+            width: volumeText.width * root.detailProgress
+            height: parent.height
+            visible: width > 0
+            clip: true
+
+            Text {
+                id: volumeText
+
+                anchors.verticalCenter: parent.verticalCenter
+                width: Math.max(volumeMetrics.advanceWidth("99%"), volumeMetrics.advanceWidth("MAX"), volumeMetrics.advanceWidth(text))
+                horizontalAlignment: Text.AlignRight
+                text: !root.audio ? "—" : root.percentage === 100 ? "MAX" : root.percentage + "%"
+                color: Theme.colors.text
+                renderType: Theme.typography.textRenderType
+                font.family: Theme.typography.fontFamily
+                font.styleName: Theme.typography.barFontStyle
+                font.pixelSize: Theme.typography.barFontPixelSize
+                font.hintingPreference: Theme.typography.fontHintingPreference
+                font.features: Theme.typography.fontFeatures
+            }
         }
     }
 
