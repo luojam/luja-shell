@@ -15,6 +15,7 @@ sudo pacman -Syu --needed \
     hyprland \
     quickshell \
     cliphist \
+    libqalculate \
     diffutils \
     ghostty \
     wiremix \
@@ -86,6 +87,7 @@ hl.bind("SUPER + T", hl.dsp.exec_cmd("quickshell ipc --config luja-shell call ba
 ```sh
 quickshell ipc --config luja-shell call launcher toggle             # App launcher - !important BIND this
 quickshell ipc --config luja-shell call clipboard toggle            # Clipboard history
+quickshell ipc --config luja-shell call calculator toggle           # Calculator
 quickshell ipc --config luja-shell call bar toggle                  # Expand/collapse top bar
 quickshell ipc --config luja-shell call notifications dismiss       # <Optional> dismiss a notification
 quickshell ipc --config luja-shell call notifications dismissAll    # <Optional> dismiss all notifications

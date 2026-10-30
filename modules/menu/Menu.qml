@@ -14,7 +14,8 @@ PanelWindow {
 
     readonly property var tabs: [
         { id: "launcher", title: "Applications", component: applicationsTab },
-        { id: "clipboard", title: "Clipboard", component: clipboardTab }
+        { id: "clipboard", title: "Clipboard", component: clipboardTab },
+        { id: "calculator", title: "Calculator", component: calculatorTab }
     ]
     property int currentIndex: 0
 
@@ -79,6 +80,14 @@ PanelWindow {
         }
     }
 
+    IpcHandler {
+        target: "calculator"
+
+        function toggle(): void {
+            root.toggle("calculator");
+        }
+    }
+
     HyprlandFocusGrab {
         windows: [root]
         active: root.visible
@@ -114,6 +123,11 @@ PanelWindow {
     Component {
         id: clipboardTab
         Clipboard {}
+    }
+
+    Component {
+        id: calculatorTab
+        Calculator {}
     }
 
     Rectangle {
