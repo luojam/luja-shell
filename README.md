@@ -58,6 +58,13 @@ Supports image previews and does not store passwords flagged with `x-kde-passwor
 
 ## Configuration
 
+Settings file at `${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/settings.json`. Currently available settings listed below:
+
+- barStyle: "notch" (default) or "pill"
+
+> [!NOTE]
+> Additional configuration requires source edits for now. More settings will be added as the project develops.
+
 - [config/Config.qml](config/Config.qml)
 - [config/Theme.qml](config/Theme.qml)
 
@@ -89,6 +96,7 @@ quickshell ipc --config luja-shell call launcher toggle             # App launch
 quickshell ipc --config luja-shell call clipboard toggle            # Clipboard history
 quickshell ipc --config luja-shell call calculator toggle           # Calculator
 quickshell ipc --config luja-shell call bar toggle                  # Expand/collapse top bar
+quickshell ipc --config luja-shell call bar toggleStyle             # Switch notch/pill style
 quickshell ipc --config luja-shell call notifications dismiss       # <Optional> dismiss a notification
 quickshell ipc --config luja-shell call notifications dismissAll    # <Optional> dismiss all notifications
 ```

@@ -42,6 +42,10 @@ Variants {
             function toggle(): void {
                 bar.expanded = !bar.expanded;
             }
+
+            function toggleStyle(): void {
+                Config.barStyle = Config.barStyle === "pill" ? "notch" : "pill";
+            }
         }
 
         BarSurface {
