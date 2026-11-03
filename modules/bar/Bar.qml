@@ -51,12 +51,15 @@ Variants {
             anchors.verticalCenter: parent.verticalCenter
             width: content.width
             height: bar.height
+            style: Config.barStyle
             collapsedHeight: content.height
             radius: Theme.bar.widgetRadius
+            shoulderRadius: Theme.bar.shoulderRadius
             color: Theme.colors.barBackground
             expansion: bar.expansion
-            collapsedPills: content.collapsedPills
+            collapsedPillBounds: content.collapsedPillBounds
             expansionOrigin: content.coreBounds.x + content.coreBounds.width / 2
+            collapsedNotchBounds: content.collapsedNotchBounds
 
             BarContent {
                 id: content
