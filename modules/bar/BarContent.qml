@@ -17,7 +17,9 @@ Row {
     readonly property bool volumeInteractive: expandedContentInteractive || volumeFeedback
 
     readonly property rect coreBounds: Qt.rect(core.x, core.y, core.width, core.height)
-    readonly property list<rect> collapsedPills: {
+    readonly property rect collapsedNotchBounds: Qt.rect(core.x, core.y,
+        volumeFeedback ? volumeSlot.x + volumeSlot.width - core.x : core.width, core.height)
+    readonly property list<rect> collapsedPillBounds: {
         const pills = [
             Qt.rect(core.x + clock.x, core.y + clock.y, clock.width, clock.height),
             Qt.rect(core.x + workspaces.x, core.y + workspaces.y, workspaces.width, workspaces.height)

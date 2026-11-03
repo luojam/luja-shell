@@ -57,6 +57,7 @@ Singleton {
         readonly property int height: 24
         readonly property int widgetHeight: 22
         readonly property int widgetRadius: 8
+        readonly property int shoulderRadius: 8
         readonly property int widgetPadding: 8
         readonly property int trayPadding: 5
         readonly property int spacing: 4
