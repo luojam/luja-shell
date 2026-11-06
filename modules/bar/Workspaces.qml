@@ -11,11 +11,21 @@ Rectangle {
 
     required property ShellScreen screen
     readonly property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
+    readonly property bool specialWorkspaceActive: (monitor?.lastIpcObject.specialWorkspace?.name ?? "") !== ""
 
     implicitWidth: workspaceRow.implicitWidth + Theme.workspaces.padding * 2
     implicitHeight: Theme.bar.widgetHeight
     radius: Theme.bar.widgetRadius
     color: Theme.colors.barBackground
+
+    Connections {
+        target: Hyprland
+
+        function onRawEvent(event: HyprlandEvent): void {
+            if (event.name === "activespecial")
+                Hyprland.refreshMonitors();
+        }
+    }
 
     Row {
         id: workspaceRow
@@ -41,7 +51,7 @@ Rectangle {
                     anchors.fill: parent
                     preferredRendererType: Shape.CurveRenderer
 
-                    property real barWidth: indicator.modelData.active ? Theme.workspaces.activeWidth : Theme.workspaces.inactiveWidth
+                    property real barWidth: indicator.modelData.active && !root.specialWorkspaceActive ? Theme.workspaces.activeWidth : Theme.workspaces.inactiveWidth
                     property color barColor: indicator.modelData.active ? Theme.colors.workspaceSelected : indicator.modelData.urgent ? Theme.colors.workspaceUrgent : indicator.occupied ? Theme.colors.workspaceOccupied : Theme.colors.workspaceEmpty
 
                     ShapePath {
