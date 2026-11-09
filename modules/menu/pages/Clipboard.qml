@@ -213,7 +213,7 @@ FocusScope {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: row.modelData.id === root.currentEntryId
                     text: "\uf0ea"
-                    color: Theme.colors.accent
+                    color: Theme.colors.workspaceSelected
                     font.family: Theme.typography.iconFontFamily
                     font.pointSize: Theme.typography.menuFontPointSize
                     renderType: Theme.typography.textRenderType
@@ -222,9 +222,9 @@ FocusScope {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: row.modelData.pinned
-                    text: "★"
+                    text: "\uf08d"
                     color: Theme.colors.clipboardPinned
-                    font.family: Theme.typography.fontFamily
+                    font.family: Theme.typography.iconFontFamily
                     font.pointSize: Theme.typography.menuFontPointSize
                     renderType: Theme.typography.textRenderType
                 }
