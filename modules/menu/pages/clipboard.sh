@@ -11,7 +11,7 @@ action=${1:?Missing action}
 entry=${2:-}
 pin=
 
-if [[ "$action" != list && "$action" != current ]]; then
+if [[ "$action" != list && "$action" != current && "$action" != clear ]]; then
     if [[ "$entry" =~ ^pin:([a-f0-9]{64})$ ]]; then
         pin="$pins_dir/${BASH_REMATCH[1]}"
     elif [[ ! "$entry" =~ ^[0-9]+$ ]]; then
@@ -82,6 +82,9 @@ case "$action" in
     delete)
         [[ -z "$pin" ]] || exit 0
         printf '%s' "$entry" | cliphist delete
+        ;;
+    clear)
+        cliphist wipe
         ;;
     pin)
         if [[ -n "$pin" ]]; then

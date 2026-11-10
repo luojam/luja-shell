@@ -54,7 +54,7 @@ Bind `quickshell ipc --config luja-shell call bar toggle` to a key to expand or 
 
 Supports image previews and does not store passwords flagged with `x-kde-passwordManagerHint`.
 
-`Alt`+`P` pins an entry and `Alt`+`Delete` removes an unpinned entry.
+`Alt`+`P` pins an entry, `Alt`+`Delete` removes an unpinned entry and `Alt`+`Shift`+`Delete` clears unpinned history.
 
 ## Configuration
 
@@ -97,6 +97,4 @@ quickshell ipc --config luja-shell call clipboard toggle            # Clipboard 
 quickshell ipc --config luja-shell call calculator toggle           # Calculator
 quickshell ipc --config luja-shell call bar toggle                  # Expand/collapse top bar
 quickshell ipc --config luja-shell call bar toggleStyle             # Switch notch/pill style
-quickshell ipc --config luja-shell call notifications dismiss       # <Optional> dismiss a notification
-quickshell ipc --config luja-shell call notifications dismissAll    # <Optional> dismiss all notifications
 ```

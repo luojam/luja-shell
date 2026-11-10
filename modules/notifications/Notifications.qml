@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Services.Notifications
 import Quickshell.Wayland
 import "../../config"
@@ -42,19 +41,6 @@ PanelWindow {
         bodyMarkupSupported: true
         imageSupported: true
         onNotification: notification => notification.tracked = true
-    }
-
-    IpcHandler {
-        target: "notifications"
-
-        function dismiss(): void {
-            root.notifications[0]?.dismiss();
-        }
-
-        function dismissAll(): void {
-            for (const notification of root.notifications.slice())
-                notification.dismiss();
-        }
     }
 
     Flickable {

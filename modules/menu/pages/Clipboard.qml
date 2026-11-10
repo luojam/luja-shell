@@ -100,14 +100,16 @@ FocusScope {
 
     function perform(action: string): void {
         const entry = filteredEntries[page.listView.currentIndex];
-        if (!entry || errorMessage !== "" || process.running || (action === "delete" && entry.pinned))
+        if (errorMessage !== "" || process.running)
+            return;
+        if (action !== "clear" && (!entry || (action === "delete" && entry.pinned)))
             return;
 
         errorMessage = "";
         invalidateCurrent();
         process.action = action;
         process.openRevision = openRevision;
-        process.exec(["bash", helperPath, action, entry.id]);
+        process.exec(["bash", helperPath, action, entry?.id ?? ""]);
     }
 
     Process {
@@ -179,7 +181,10 @@ FocusScope {
         }
         onAccepted: root.perform("copy")
         onSearchKeyPressed: event => {
-            if (event.key === Qt.Key_Delete && (query.length === 0 || (event.modifiers & Qt.AltModifier))) {
+            if (event.key === Qt.Key_Delete && (event.modifiers & Qt.AltModifier) && (event.modifiers & Qt.ShiftModifier)) {
+                root.perform("clear");
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Delete && (query.length === 0 || (event.modifiers & Qt.AltModifier))) {
                 root.perform("delete");
                 event.accepted = true;
             } else if (event.key === Qt.Key_P && (event.modifiers & Qt.AltModifier)) {
